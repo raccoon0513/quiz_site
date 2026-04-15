@@ -1,0 +1,41 @@
+/* --- 기존 CSS 코드 유지 후 아래 내용 추가 --- */
+
+/* 피드백 영역 스타일 */
+#feedback-area {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff3f3;
+  border-left: 4px solid #dc3545;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#feedback-content h4 {
+  margin: 0 0 10px 0;
+  color: #dc3545;
+}
+
+#feedback-content p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* 다음 문제 버튼 스타일 */
+.danger-btn {
+  background-color: #dc3545;
+  margin-top: 15px;
+}
+.danger-btn:hover {
+  background-color: #c82333;
+}
+
+/* 정답 확인 시 버튼 클릭 방지 */
+.option-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

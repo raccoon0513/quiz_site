@@ -1,0 +1,23 @@
+[
+  {
+    "unit": "1단원",
+    "question": "자바스크립트에서 변수를 선언할 때 사용하는 키워드가 아닌 것은?",
+    "options": ["var", "let", "const", "int"],
+    "answer": 3,
+    "explanation": "'int'는 C, Java 등에서 사용되는 정수형 변수 선언 키워드입니다. JS에서는 var, let, const를 사용합니다."
+  },
+  {
+    "unit": "1단원",
+    "question": "HTML의 의미는 무엇인가요?",
+    "options": ["Hyper Text Markup Language", "High Text Machine Language", "Hyper Tabular Markup Language", "None of the above"],
+    "answer": 0,
+    "explanation": "HTML은 Hyper Text Markup Language의 약자입니다."
+  },
+  {
+    "unit": "2단원",
+    "question": "CSS에서 글자 색상을 변경하는 속성은?",
+    "options": ["background-color", "color", "text-color", "font-color"],
+    "answer": 1,
+    "explanation": "글자 색상을 변경할 때는 'color' 속성을 사용합니다."
+  }
+]

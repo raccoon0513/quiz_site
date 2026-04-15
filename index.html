@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>퀴즈 웹사이트</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <div id="start-screen" class="screen active">
+      <h1>퀴즈 풀이 시작</h1>
+      <p>1. 단원을 선택하세요:</p>
+      <div id="unit-selection"></div>
+      <p>2. 추가 옵션:</p>
+      <label>
+        <input type="checkbox" id="immediate-feedback-cb"> 오답 시 즉시 정답/해설 보기
+      </label>
+      <button id="start-btn">퀴즈 시작</button>
+    </div>
+
+    <div id="quiz-screen" class="screen">
+      <div class="header">
+        <span id="progress-text">0/0</span>
+      </div>
+      <h2 id="question-text">문제 텍스트</h2>
+      <div id="options-container"></div>
+      
+      <div id="feedback-area" style="display: none;">
+        <div id="feedback-content"></div>
+        <button id="next-btn" class="danger-btn">다음 문제로 넘어가기</button>
+      </div>
+    </div>
+
+    <div id="result-screen" class="screen">
+      <h1>풀이 결과</h1>
+      <h2 id="score-text"></h2>
+      <div id="wrong-answers-container"></div>
+      <button id="restart-btn">처음으로 돌아가기</button>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
