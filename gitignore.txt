@@ -1,0 +1,4 @@
+original/
+*.py
+
+TODO : 개발이 완료되면 이 파일을 .gitignore로 변경하시오

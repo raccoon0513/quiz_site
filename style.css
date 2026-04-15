@@ -1,4 +1,105 @@
-/* --- 기존 CSS 코드 유지 후 아래 내용 추가 --- */
+* {
+  box-sizing: border-box;
+  font-family: 'Pretendard', sans-serif;
+}
+
+body {
+  background-color: #f4f6f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#app {
+  background: white;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 30px;
+  position: relative;
+}
+
+/* 화면 전환 처리 */
+.screen {
+  display: none;
+}
+.screen.active {
+  display: block;
+}
+
+/* 퀴즈 화면 상단 UI */
+.header {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-weight: bold;
+  color: #555;
+  background: #eee;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+h1, h2 {
+  color: #333;
+}
+
+/* 버튼 스타일 */
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  width: 100%;
+}
+button:hover {
+  background-color: #0056b3;
+}
+
+/* 선택지 버튼 */
+.option-btn {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 2px solid #e9ecef;
+  margin-bottom: 10px;
+  text-align: left;
+  transition: 0.2s;
+}
+.option-btn:hover {
+  background-color: #e2e6ea;
+  border-color: #dae0e5;
+}
+
+/* 오답 노트 영역 */
+.wrong-item {
+  background: #fff3f3;
+  border-left: 4px solid #dc3545;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+.wrong-item h4 {
+  margin: 0 0 10px 0;
+  color: #dc3545;
+}
+.wrong-item p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+.explanation {
+  color: #666;
+  background: #fff;
+  padding: 8px;
+  margin-top: 10px !important;
+  border-radius: 4px;
+}
 
 /* 피드백 영역 스타일 */
 #feedback-area {
