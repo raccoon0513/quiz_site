@@ -202,47 +202,132 @@ startBtn.addEventListener('click', () => {
   loadQuestion();
 });
 
+// 문제 불러오기 (주관식/객관식 분기 처리)
 function loadQuestion() {
   feedbackArea.style.display = 'none';
   const currentQ = targetQuestions[currentIndex];
-  progressText.textContent = `${currentIndex + 1} / ${targetQuestions.length} (${currentQ.book} - ${currentQ.unit})`;
+  progressText.textContent = `${currentIndex + 1} / ${targetQuestions.length} (${currentQ.book || ''} - ${currentQ.unit})`;
   questionText.textContent = currentQ.question;
   optionsContainer.innerHTML = '';
   
-  currentQ.options.forEach((optionText, index) => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.textContent = optionText;
-    btn.onclick = () => selectAnswer(index);
-    optionsContainer.appendChild(btn);
-  });
+  if (currentQ.quiz_type === 'sub') {
+    // 주관식 UI 렌더링
+    const inputField = document.createElement('textarea');
+    inputField.id = 'sub-input';
+    inputField.rows = 4;
+    inputField.style.width = '100%';
+    inputField.style.padding = '10px';
+    inputField.style.marginBottom = '10px';
+    inputField.style.borderRadius = '8px';
+    inputField.style.border = '1px solid #ccc';
+    inputField.style.fontFamily = 'inherit';
+    inputField.placeholder = '정답을 입력하세요... (엔터 키로 제출 가능)';
+    
+    // Shift+Enter는 줄바꿈, 그냥 Enter는 제출
+    inputField.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        submitSubAnswer();
+      }
+    });
+
+    const submitBtn = document.createElement('button');
+    submitBtn.id = 'sub-submit-btn';
+    submitBtn.textContent = '정답 제출';
+    submitBtn.onclick = () => submitSubAnswer();
+    
+    optionsContainer.appendChild(inputField);
+    optionsContainer.appendChild(submitBtn);
+    
+    // 모바일이 아닌 환경을 위해 포커스 자동 지정
+    setTimeout(() => inputField.focus(), 50);
+
+  } else {
+    // 객관식 UI 렌더링
+    currentQ.options.forEach((optionText, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = optionText;
+      btn.onclick = () => selectAnswer(index);
+      optionsContainer.appendChild(btn);
+    });
+  }
 }
 
+// 주관식 정답 제출 및 검사
+function submitSubAnswer() {
+  const currentQ = targetQuestions[currentIndex];
+  const inputField = document.getElementById('sub-input');
+  const userInput = inputField.value.trim();
+  
+  if (!userInput) {
+    alert("정답을 입력해주세요.");
+    return;
+  }
+
+  // 중복 클릭 및 수정 방지
+  inputField.disabled = true;
+  const submitBtn = document.getElementById('sub-submit-btn');
+  if (submitBtn) submitBtn.disabled = true;
+
+  // 키워드 파싱 (공백 무시)
+  const keywordStr = currentQ.keywords || "";
+  const keywords = keywordStr.split(',').map(k => k.trim()).filter(k => k.length > 0);
+  
+  let matchCount = 0;
+  keywords.forEach(kw => {
+    // 띄어쓰기를 무시하고 포함 여부를 검사하고 싶다면 정규식을 사용할 수 있지만, 
+    // 기본적으로 문자열 includes를 사용합니다.
+    if (userInput.includes(kw)) {
+      matchCount++;
+    }
+  });
+
+  // 70% 이상 일치하는지 확인
+  const matchRatio = keywords.length > 0 ? matchCount / keywords.length : 0;
+  const isCorrect = keywords.length === 0 ? true : (matchRatio >= 0.7);
+
+  // 화면에 표시할 원래 정답 문자열
+  const correctAnswerString = currentQ.answer !== undefined ? String(currentQ.answer) : keywords.join(', ');
+
+  handleAnswerResult(isCorrect, userInput, correctAnswerString);
+}
+
+// 객관식 정답 선택
 function selectAnswer(selectedIndex) {
   const optionBtns = document.querySelectorAll('.option-btn');
   optionBtns.forEach(btn => btn.disabled = true);
 
   const currentQ = targetQuestions[currentIndex];
   const isCorrect = (selectedIndex === currentQ.answer);
+  const userAnswerString = currentQ.options[selectedIndex];
+  const correctAnswerString = currentQ.options[currentQ.answer];
 
-  if (isCorrect) correctCount++;
-  else {
+  handleAnswerResult(isCorrect, userAnswerString, correctAnswerString);
+}
+
+// 정답/오답 공통 처리 로직
+function handleAnswerResult(isCorrect, userAnswerString, correctAnswerString) {
+  const currentQ = targetQuestions[currentIndex];
+
+  if (isCorrect) {
+    correctCount++;
+  } else {
     wrongQuestions.push({
       question: currentQ.question,
-      userAnswer: currentQ.options[selectedIndex],
-      correctAnswer: currentQ.options[currentQ.answer],
+      userAnswer: userAnswerString,
+      correctAnswer: correctAnswerString,
       explanation: currentQ.explanation
     });
   }
 
-  // 정답 및 오답에 따른 피드백 출력
   if (showImmediateFeedback) {
     if (isCorrect) {
       feedbackArea.style.backgroundColor = '#d4edda';
       feedbackArea.style.borderLeftColor = '#28a745';
       feedbackContent.innerHTML = `
         <h4 style="color: #28a745;">✅ 정답입니다!</h4>
-        <p><strong>정답:</strong> ${currentQ.options[currentQ.answer]}</p>
+        <p><strong>정답:</strong> ${correctAnswerString}</p>
         <p class="explanation" style="color: #444;">💡 <strong>해설:</strong> ${currentQ.explanation}</p>
       `;
     } else {
@@ -250,8 +335,8 @@ function selectAnswer(selectedIndex) {
       feedbackArea.style.borderLeftColor = '#dc3545';
       feedbackContent.innerHTML = `
         <h4 style="color: #dc3545;">❌ 오답입니다!</h4>
-        <p><strong>내가 고른 답:</strong> ${currentQ.options[selectedIndex]}</p>
-        <p><strong>정답:</strong> ${currentQ.options[currentQ.answer]}</p>
+        <p><strong>내가 입력/고른 답:</strong> ${userAnswerString}</p>
+        <p><strong>정답:</strong> ${correctAnswerString}</p>
         <p class="explanation" style="color: #444;">💡 <strong>해설:</strong> ${currentQ.explanation}</p>
       `;
     }
@@ -282,7 +367,7 @@ function showResults() {
       item.className = 'wrong-item';
       item.innerHTML = `
         <h4 style="color: #dc3545;">❌ 오답: ${wrong.question}</h4>
-        <p><strong>내가 고른 답:</strong> ${wrong.userAnswer}</p>
+        <p><strong>내가 입력/고른 답:</strong> ${wrong.userAnswer}</p>
         <p><strong>정답:</strong> ${wrong.correctAnswer}</p>
         <p class="explanation">💡 <strong>풀이:</strong> ${wrong.explanation}</p>
       `;
@@ -291,12 +376,9 @@ function showResults() {
   }
 }
 
-
-
 // 🛑 도중에 그만두기 버튼 이벤트
 quitBtn.addEventListener('click', () => {
   if (confirm("정말 퀴즈를 그만두시겠습니까? 지금까지 푼 문제에 대한 결과만 표시됩니다.")) {
-    // 전체 문제 배열을 현재까지 푼 문제 수만큼만 자르기 (결과창 통계 정확도를 위해)
     targetQuestions = targetQuestions.slice(0, currentIndex);
     showResults();
   }
@@ -304,9 +386,8 @@ quitBtn.addEventListener('click', () => {
 
 // ⌨️ 스페이스바 입력 이벤트 (정답/해설 창이 떠 있을 때만 작동)
 document.addEventListener('keydown', (e) => {
-  // 스페이스바가 눌렸고, 피드백 영역이 화면에 보이고 있는 상태라면
   if (e.code === 'Space' && feedbackArea.style.display === 'block') {
-    e.preventDefault(); // 스페이스바 기본 동작(페이지 스크롤 다운) 방지
+    e.preventDefault(); 
     proceedToNext();
   }
 });
