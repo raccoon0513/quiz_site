@@ -394,10 +394,37 @@ quitBtn.addEventListener('click', () => {
 });
 
 // ⌨️ 스페이스바 입력 이벤트 (정답/해설 창이 떠 있을 때만 작동)
+// ⌨️ 키보드 입력 이벤트 (스페이스바 진행 및 숫자키 객관식 선택)
 document.addEventListener('keydown', (e) => {
+  // 1. 스페이스바 다음 문제 진행 (피드백 창이 떠 있을 때만)
   if (e.code === 'Space' && feedbackArea.style.display === 'block') {
     e.preventDefault(); 
     proceedToNext();
+    return;
+  }
+
+  // 2. 숫자키 1~10번 객관식 정답 선택
+  const quizScreen = document.getElementById('quiz-screen');
+  // 퀴즈 화면이 활성화되어 있고, 아직 정답을 고르지 않은 상태일 때만 작동
+  if (quizScreen.classList.contains('active') && feedbackArea.style.display !== 'block') {
+    const currentQ = targetQuestions[currentIndex];
+
+    // 객관식 문제일 경우에만 작동
+    if (currentQ && currentQ.quiz_type !== 'sub' && currentQ.options) {
+      const match = e.code.match(/^Digit(\d)$/); // 'Digit1' ~ 'Digit0' 감지
+      
+      if (match) {
+        const digit = parseInt(match[1], 10);
+        // 숫자 1은 인덱스 0, 숫자 0은 인덱스 9(10번째 보기)로 매핑
+        const selectedIndex = digit === 0 ? 9 : digit - 1;
+
+        // 선택한 번호가 실제 보기 개수 안에 존재할 때만 정답 처리
+        if (selectedIndex >= 0 && selectedIndex < currentQ.options.length) {
+          e.preventDefault();
+          selectAnswer(selectedIndex);
+        }
+      }
+    }
   }
 });
 
