@@ -17,6 +17,7 @@ const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
 const quitBtn = document.getElementById('quit-btn');
 
+const questionNo = document.getElementById('question-no');
 const byBookCb = document.getElementById('by-book-cb');
 const shuffleChapterCb = document.getElementById('shuffle-chapter-cb');
 const immediateFeedbackCb = document.getElementById('immediate-feedback-cb');
@@ -206,8 +207,16 @@ startBtn.addEventListener('click', () => {
 function loadQuestion() {
   feedbackArea.style.display = 'none';
   const currentQ = targetQuestions[currentIndex];
+  
+  // 1. 문제 번호 표시 (JSON에 no가 없으면 현재 순서 인덱스로 표시)
+  questionNo.textContent = currentQ.no ? `Q${currentQ.no}.` : `Q${0}.`;
+  
+  // 2. 진행도 표시
   progressText.textContent = `${currentIndex + 1} / ${targetQuestions.length} (${currentQ.book || ''} - ${currentQ.unit})`;
+  
+  // 3. 문제 텍스트 표시
   questionText.textContent = currentQ.question;
+  
   optionsContainer.innerHTML = '';
   
   if (currentQ.quiz_type === 'sub') {

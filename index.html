@@ -36,13 +36,16 @@
         <span id="progress-text">0/0</span>
         <button id="quit-btn" style="background-color: #6c757d; padding: 4px 10px; font-size: 12px; width: auto; margin-top: 0;">그만두기</button>
       </div>
-      <h2 id="question-text">문제 텍스트</h2>
+      
+      <h2 style="display: flex; gap: 8px;">
+        <span id="question-no" style="color: #007bff; min-width: 40px;"></span>
+        <span id="question-text">문제 텍스트</span>
+      </h2>
 
-
-      <div id="options-container"></div>  
+      <div id="options-container"></div> 
       <div id="feedback-area" style="display: none;">
         <div id="feedback-content"></div>
-        <button id="next-btn" class="danger-btn">다음 문제로 넘어가기</button>
+        <button id="next-btn" class="danger-btn">다음 문제로 넘어가기(SpaceBar)</button>
       </div>
     </div>
 
