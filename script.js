@@ -31,6 +31,8 @@ const feedbackArea = document.getElementById('feedback-area');
 const feedbackContent = document.getElementById('feedback-content');
 const nextBtn = document.getElementById('next-btn');
 
+console.log("upload");
+
 function switchScreen(screenId) {
   screens.forEach(s => s.classList.remove('active'));
   document.getElementById(screenId).classList.add('active');
