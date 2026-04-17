@@ -51,7 +51,7 @@ export async function fetchQuestions(secretKey) {
     return allQuestions;
 
   } catch (error) {
-    console.warn("경고: 올바르지 않은 키가 감지되었습니다. 위장 데이터를 출력합니다.");
+    console.warn("경고: 올바르지 않은 키가 감지되었습니다.");
     return generateDummyData();
   }
 }
