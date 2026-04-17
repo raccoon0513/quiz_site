@@ -15,8 +15,8 @@ function generateDummyData() {
   
   for (let i = 0; i < numQuestions; i++) {
     dummyData.push({
-      book: `book ${generateRandomString(3)}`,
-      unit: `단원 ${generateRandomString(2)}`,
+      book: `call 0x$0.20 ${generateRandomString(3)}`,
+      unit: `call 4B9 ${generateRandomString(2)}`,
       question: `${generateRandomString(15)}가(이) ${generateRandomString(5)} 하는 것은?`,
       options: [
         generateRandomString(8), generateRandomString(8), generateRandomString(8), generateRandomString(8)
