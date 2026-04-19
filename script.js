@@ -271,10 +271,10 @@ function submitSubAnswer() {
   const inputField = document.getElementById('sub-input');
   const userInput = inputField.value.trim();
   
-  if (!userInput) {
-    alert("정답을 입력해주세요.");
-    return;
-  }
+  // if (!userInput) {
+  //   alert("정답을 입력해주세요.");
+  //   return;
+  // }
 
   // 중복 클릭 및 수정 방지
   inputField.disabled = true;
