@@ -2,6 +2,8 @@
 import { fetchQuestions } from './src/api.js';
 import { shuffleArray } from './src/utils.js';
 
+
+let retryQuestions = []; // 다시 풀 문제들을 담아둘 배열
 let allQuestions = [];
 let targetQuestions = [];
 let wrongQuestions = [];
@@ -30,6 +32,7 @@ const wrongAnswersContainer = document.getElementById('wrong-answers-container')
 const feedbackArea = document.getElementById('feedback-area');
 const feedbackContent = document.getElementById('feedback-content');
 const nextBtn = document.getElementById('next-btn');
+const infiniteReviewCb = document.getElementById('infinite-review-cb');
 
 console.log("upload");
 
@@ -38,7 +41,7 @@ function switchScreen(screenId) {
   document.getElementById(screenId).classList.add('active');
 }
 
-// 옵션 자동 저장 및 복원 (LocalStorage)
+// 옵션 자동 저장
 function savePrefs() {
   const prefs = { books: {}, units: {}, options: {} };
   document.querySelectorAll('.book-cb').forEach(cb => prefs.books[cb.value] = cb.checked);
@@ -46,22 +49,25 @@ function savePrefs() {
   prefs.options = {
     byBook: byBookCb.checked,
     shuffleChapter: shuffleChapterCb.checked,
-    immediateFeedback: immediateFeedbackCb.checked
+    immediateFeedback: immediateFeedbackCb.checked,
+    infiniteReview: infiniteReviewCb.checked // 🔥 추가
   };
   localStorage.setItem('quiz_prefs', JSON.stringify(prefs));
 }
 
+// 옵션 복원
 function restoreOptions() {
   const prefs = JSON.parse(localStorage.getItem('quiz_prefs')) || {};
   if (prefs.options) {
     byBookCb.checked = !!prefs.options.byBook;
     shuffleChapterCb.checked = !!prefs.options.shuffleChapter;
     immediateFeedbackCb.checked = !!prefs.options.immediateFeedback;
+    infiniteReviewCb.checked = !!prefs.options.infiniteReview; // 🔥 추가
   }
 }
 
-[byBookCb, shuffleChapterCb, immediateFeedbackCb].forEach(cb => cb.addEventListener('change', savePrefs));
-
+// 이벤트 리스너 배열에 추가
+[byBookCb, shuffleChapterCb, immediateFeedbackCb, infiniteReviewCb].forEach(cb => cb.addEventListener('change', savePrefs));
 // 계층형 단원 UI 렌더링
 function renderUnitSelection() {
   unitSelection.innerHTML = '';
@@ -200,6 +206,7 @@ startBtn.addEventListener('click', () => {
   currentIndex = 0;
   correctCount = 0;
   wrongQuestions = [];
+  retryQuestions = []; 
 
   switchScreen('quiz-screen');
   loadQuestion();
@@ -321,6 +328,8 @@ function selectAnswer(selectedIndex) {
 function handleAnswerResult(isCorrect, userAnswerString, correctAnswerString) {
   const currentQ = targetQuestions[currentIndex];
 
+  const currentQ = targetQuestions[currentIndex];
+
   if (isCorrect) {
     correctCount++;
   } else {
@@ -330,6 +339,7 @@ function handleAnswerResult(isCorrect, userAnswerString, correctAnswerString) {
       correctAnswer: correctAnswerString,
       explanation: currentQ.explanation
     });
+    retryQuestions.push(currentQ);
   }
 
   if (showImmediateFeedback) {
@@ -361,8 +371,27 @@ nextBtn.addEventListener('click', proceedToNext);
 
 function proceedToNext() {
   currentIndex++;
-  if (currentIndex < targetQuestions.length) loadQuestion();
-  else showResults();
+  
+  // 아직 현재 회차의 문제가 남았을 때
+  if (currentIndex < targetQuestions.length) {
+    loadQuestion();
+  } 
+  // 현재 회차의 문제를 다 풀었을 때
+  else {
+    // 🔥 무한 반복 옵션이 켜져 있고, 틀린 문제가 1개라도 남아있다면
+    if (infiniteReviewCb.checked && retryQuestions.length > 0) {
+      alert(`틀린 문제 ${retryQuestions.length}개를 다시 복습합니다!`);
+      
+      // 틀린 문제들을 섞어서 새로운 타겟으로 지정
+      targetQuestions = shuffleArray([...retryQuestions]);
+      currentIndex = 0;
+      retryQuestions = []; // 다음 회차를 위해 배열 비우기
+      
+      loadQuestion();
+    } else {
+      showResults(); // 완전히 다 맞추거나 무한 반복 모드가 아닐 때 결과창 출력
+    }
+  }
 }
 
 function showResults() {
