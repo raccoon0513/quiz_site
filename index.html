@@ -2,61 +2,67 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>quiz v0.0.7</title>
+  <title>quiz  "v0.0.$([int]$args[0].Groups[1].Value + 1)" </title>
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
   <div id="app">
     <div id="login-screen" class="screen active">
-      <h1>퀴즈 시스템 접속</h1>
-      <p>암호 키를 입력해주세요.</p>
-      <input type="password" id="secret-key-input" placeholder="키 입력" style="width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px;">
-      <button id="login-btn">데이터 복호화 및 접속</button>
+      <h1>?�즈 ?�스???�속</h1>
+      <p>?�호 ?��? ?�력?�주?�요.</p>
+      <input type="password" id="secret-key-input" placeholder="???�력" style="width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 4px;">
+      <button id="login-btn">?�이??복호??�??�속</button>
     </div> 
 
     <div id="start-screen" class="screen">
-      <h1>퀴즈 풀이 시작</h1>
-      <p>1. 단원을 선택하세요:</p>
+      <h1>?�즈 ?�???�작</h1>
+      <p>1. ?�원???�택?�세??</p>
       <div id="unit-selection"></div>
-      <p>2. 추가 옵션:</p>
+      <p>2. 추�? ?�션:</p>
       <label>
-        <input type="checkbox" id="by-book-cb"> 책 별로 묶어서 출제
+        <input type="checkbox" id="by-book-cb"> �?별로 묶어??출제
       </label><br>
       <label>
-        <input type="checkbox" id="shuffle-chapter-cb"> 챕터 섞기
+        <input type="checkbox" id="shuffle-chapter-cb"> 챕터 ?�기
       </label><br>
       <label>
-        <input type="checkbox" id="immediate-feedback-cb"> 매 문제마다 정답/해설 보기
+        <input type="checkbox" id="immediate-feedback-cb"> �?문제마다 ?�답/?�설 보기
       </label>
       <label>
+<<<<<<< HEAD
         <input type="checkbox" id="infinite-review-cb"> 틀린 문제 전부 맞을 때까지 무한 반복
       </label>
       <button id="start-btn">퀴즈 시작</button>
+=======
+        <input type="checkbox" id="infinite-review-cb"> ?��?문제 ?��? 맞을 ?�까지 무한 반복
+      </label>
+      <button id="start-btn">?�즈 ?�작</button>
+>>>>>>> 5c8f8a40173c9b4ba9ebc3113ddeb1139826b506
     </div>
 
     <div id="quiz-screen" class="screen">
       <div class="header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
         <span id="progress-text">0/0</span>
-        <button id="quit-btn" style="background-color: #6c757d; padding: 4px 10px; font-size: 12px; width: auto; margin-top: 0;">그만두기</button>
+        <button id="quit-btn" style="background-color: #6c757d; padding: 4px 10px; font-size: 12px; width: auto; margin-top: 0;">그만?�기</button>
       </div>
       
       <h2 style="display: flex; gap: 8px;">
         <span id="question-no" style="color: #007bff; min-width: 40px;"></span>
-        <span id="question-text">문제 텍스트</span>
+        <span id="question-text">문제 ?�스??/span>
       </h2>
 
       <div id="options-container"></div> 
       <div id="feedback-area" style="display: none;">
         <div id="feedback-content"></div>
-        <button id="next-btn" class="danger-btn">다음 문제로 넘어가기(SpaceBar)</button>
+        <button id="next-btn" class="danger-btn">?�음 문제�??�어가�?SpaceBar)</button>
       </div>
     </div>
 
     <div id="result-screen" class="screen">
-      <h1>풀이 결과</h1>
+      <h1>?�??결과</h1>
       <h2 id="score-text"></h2>
       <div id="wrong-answers-container"></div>
-      <button id="restart-btn">처음으로 돌아가기</button>
+      <button id="restart-btn">처음?�로 ?�아가�?/button>
     </div>
   </div>
 

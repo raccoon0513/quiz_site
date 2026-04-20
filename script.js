@@ -2,7 +2,12 @@
 import { fetchQuestions } from './src/api.js';
 import { shuffleArray } from './src/utils.js';
 
+<<<<<<< HEAD
 let retryQuestions = [];
+=======
+
+let retryQuestions = []; // 다시 풀 문제들을 담아둘 배열
+>>>>>>> 5c8f8a40173c9b4ba9ebc3113ddeb1139826b506
 let allQuestions = [];
 let targetQuestions = [];
 let wrongQuestions = [];
@@ -40,7 +45,10 @@ function switchScreen(screenId) {
   document.getElementById(screenId).classList.add('active');
 }
 
+<<<<<<< HEAD
 // 옵션 자동 저장 및 복원 (LocalStorage)
+=======
+>>>>>>> 5c8f8a40173c9b4ba9ebc3113ddeb1139826b506
 // 옵션 자동 저장
 function savePrefs() {
   const prefs = { books: {}, units: {}, options: {} };
@@ -206,7 +214,11 @@ startBtn.addEventListener('click', () => {
   currentIndex = 0;
   correctCount = 0;
   wrongQuestions = [];
+<<<<<<< HEAD
   retryQuestions = []; // 🔥 시작할 때 복습 배열 초기화
+=======
+  retryQuestions = []; 
+>>>>>>> 5c8f8a40173c9b4ba9ebc3113ddeb1139826b506
 
   switchScreen('quiz-screen');
   loadQuestion();
@@ -328,6 +340,8 @@ function selectAnswer(selectedIndex) {
 function handleAnswerResult(isCorrect, userAnswerString, correctAnswerString) {
   const currentQ = targetQuestions[currentIndex];
 
+  const currentQ = targetQuestions[currentIndex];
+
   if (isCorrect) {
     correctCount++;
   } else {
@@ -337,7 +351,10 @@ function handleAnswerResult(isCorrect, userAnswerString, correctAnswerString) {
       correctAnswer: correctAnswerString,
       explanation: currentQ.explanation
     });
+<<<<<<< HEAD
     // 🔥 무한 반복을 위해 틀린 문제의 원본 데이터를 다시 담아둠
+=======
+>>>>>>> 5c8f8a40173c9b4ba9ebc3113ddeb1139826b506
     retryQuestions.push(currentQ);
   }
 
