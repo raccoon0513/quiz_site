@@ -273,6 +273,7 @@ function loadQuestion() {
 }
 
 // 주관식 정답 제출 및 검사
+// 주관식 정답 제출 및 검사
 function submitSubAnswer() {
   const currentQ = targetQuestions[currentIndex];
   const inputField = document.getElementById('sub-input');
@@ -288,14 +289,16 @@ function submitSubAnswer() {
   const submitBtn = document.getElementById('sub-submit-btn');
   if (submitBtn) submitBtn.disabled = true;
 
-  // 키워드 파싱 (공백 무시)
-  const keywordStr = currentQ.keywords || "";
-  const keywords = keywordStr.split(',').map(k => k.trim()).filter(k => k.length > 0);
+  // 🔥 [복구된 로직] 띄어쓰기 및 배열 형태 키워드 모두 지원
+  let keywords = [];
+  if (typeof currentQ.keywords === 'string') {
+    keywords = currentQ.keywords.split(/[,\s]+/).map(k => k.trim()).filter(k => k.length > 0);
+  } else if (Array.isArray(currentQ.keywords)) {
+    keywords = currentQ.keywords.map(k => String(k).trim()).filter(k => k.length > 0);
+  }
   
   let matchCount = 0;
   keywords.forEach(kw => {
-    // 띄어쓰기를 무시하고 포함 여부를 검사하고 싶다면 정규식을 사용할 수 있지만, 
-    // 기본적으로 문자열 includes를 사용합니다.
     if (userInput.includes(kw)) {
       matchCount++;
     }
@@ -306,7 +309,7 @@ function submitSubAnswer() {
   const isCorrect = keywords.length === 0 ? true : (matchRatio >= 0.7);
 
   // 화면에 표시할 원래 정답 문자열
-  const correctAnswerString = currentQ.answer !== undefined ? String(currentQ.answer) : keywords.join(', ');
+  const correctAnswerString = currentQ.answer !== undefined ? String(currentQ.answer) : keywords.join(' ');
 
   handleAnswerResult(isCorrect, userInput, correctAnswerString);
 }
@@ -326,7 +329,6 @@ function selectAnswer(selectedIndex) {
 
 // 정답/오답 공통 처리 로직
 function handleAnswerResult(isCorrect, userAnswerString, correctAnswerString) {
-  const currentQ = targetQuestions[currentIndex];
 
   const currentQ = targetQuestions[currentIndex];
 
