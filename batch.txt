@@ -1,0 +1,4 @@
+(Get-Content index.html) -replace 'v0\.0\.(\d+)', { "v0.0.$([int]$args[0].Groups[1].Value + 1)" } | Set-Content index.html
+git add .
+git commit -m "update"
+git push
