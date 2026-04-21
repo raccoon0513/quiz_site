@@ -245,6 +245,7 @@ function loadQuestion() {
     inputField.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
+        e.stopPropagation(); // 🔥 반드시 추가! 이벤트 중복 실행 방지
         submitSubAnswer();
       }
     });
@@ -318,13 +319,16 @@ function submitSubAnswer() {
 }
 
 // 객관식 정답 선택
+// 객관식 정답 선택
 function selectAnswer(selectedIndex) {
   const optionBtns = document.querySelectorAll('.option-btn');
   optionBtns.forEach(btn => btn.disabled = true);
 
   const currentQ = targetQuestions[currentIndex];
   const isCorrect = (selectedIndex === currentQ.answer);
-  const userAnswerString = currentQ.options[selectedIndex];
+  
+  // 🔥 추가: 엔터 키로 패스(-1)했을 때의 텍스트 처리
+  const userAnswerString = selectedIndex === -1 ? "선택 안 함 (패스)" : currentQ.options[selectedIndex];
   const correctAnswerString = currentQ.options[currentQ.answer];
 
   handleAnswerResult(isCorrect, userAnswerString, correctAnswerString);
@@ -439,17 +443,16 @@ quitBtn.addEventListener('click', () => {
   }
 });
 
-// ⌨️ 스페이스바 입력 이벤트 (정답/해설 창이 떠 있을 때만 작동)
-// ⌨️ 키보드 입력 이벤트 (스페이스바 진행 및 숫자키 객관식 선택)
+// ⌨️ 키보드 입력 이벤트
 document.addEventListener('keydown', (e) => {
-  // 1. 스페이스바 다음 문제 진행 (피드백 창이 떠 있을 때만)
-  if (e.code === 'Space' && feedbackArea.style.display === 'block') {
+  // 1. 엔터 키로 다음 문제 진행 (피드백 창이 떠 있을 때만 작동)
+  if (e.key === 'Enter' && feedbackArea.style.display === 'block') {
     e.preventDefault(); 
     proceedToNext();
     return;
   }
 
-  // 2. 숫자키 1~10번 객관식 정답 선택
+  // 2. 숫자키 1~10번 객관식 정답 선택 및 엔터키 패스
   const quizScreen = document.getElementById('quiz-screen');
   // 퀴즈 화면이 활성화되어 있고, 아직 정답을 고르지 않은 상태일 때만 작동
   if (quizScreen.classList.contains('active') && feedbackArea.style.display !== 'block') {
@@ -457,8 +460,15 @@ document.addEventListener('keydown', (e) => {
 
     // 객관식 문제일 경우에만 작동
     if (currentQ && currentQ.quiz_type !== 'sub' && currentQ.options) {
-      const match = e.code.match(/^Digit(\d)$/); // 'Digit1' ~ 'Digit0' 감지
       
+      // 🔥 추가: 객관식 화면에서 엔터를 누르면 빈 답(-1)으로 제출하고 패스
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        selectAnswer(-1);
+        return;
+      }
+
+      const match = e.code.match(/^Digit(\d)$/); // 'Digit1' ~ 'Digit0' 감지
       if (match) {
         const digit = parseInt(match[1], 10);
         // 숫자 1은 인덱스 0, 숫자 0은 인덱스 9(10번째 보기)로 매핑
