@@ -1,4 +1,1 @@
-$content = Get-Content index.html -Raw -Encoding utf8; $current = [regex]::Match($content, 'v0\.0\.(\d+)').Groups[1].Value; $next = [int]$current + 1; $content -replace "v0\.0\.$current", "v0.0.$next" | Set-Content index.html -Encoding utf8
-git add .
-git commit -m "update"
-git push
+$content = Get-Content index.html -Raw -Encoding utf8; $content -replace '(?<=<title>.*v\d+\.\d+\.)(\d+)(?=.*</title>)', { [int]$args[0].Value + 1 } | Set-Content index.html -Encoding utf8; git add .; git commit -m "update"; git push
