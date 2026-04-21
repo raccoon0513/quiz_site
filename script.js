@@ -270,6 +270,9 @@ function loadQuestion() {
       optionsContainer.appendChild(btn);
     });
   }
+  if (window.MathJax) {
+    MathJax.typesetPromise([questionText, optionsContainer]).catch((err) => console.log('MathJax error: ', err));
+  }
 }
 
 // 주관식 정답 제출 및 검사
@@ -329,8 +332,7 @@ function selectAnswer(selectedIndex) {
 
 // 정답/오답 공통 처리 로직
 function handleAnswerResult(isCorrect, userAnswerString, correctAnswerString) {
-
-  const currentQ = targetQuestions[currentIndex];
+  const currentQ = targetQuestions[currentIndex]; // ✅ 중복 선언 제거됨
 
   if (isCorrect) {
     correctCount++;
@@ -367,6 +369,11 @@ function handleAnswerResult(isCorrect, userAnswerString, correctAnswerString) {
     feedbackArea.style.display = 'block';
   } else {
     proceedToNext();
+  }
+
+  // 🧮 피드백 창에 나타난 해설(explanation)의 수식 변환 (MathJax)
+  if (window.MathJax && feedbackArea.style.display === 'block') {
+    MathJax.typesetPromise([feedbackContent]).catch((err) => console.log('MathJax error: ', err));
   }
 }
 
@@ -416,6 +423,11 @@ function showResults() {
       `;
       wrongAnswersContainer.appendChild(item);
     });
+  }
+
+  // 🧮 결과창 오답 노트에 있는 수식들 한꺼번에 변환 (MathJax)
+  if (window.MathJax) {
+    MathJax.typesetPromise([wrongAnswersContainer]).catch((err) => console.log('MathJax error: ', err));
   }
 }
 
