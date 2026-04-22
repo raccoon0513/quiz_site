@@ -178,7 +178,7 @@ loginBtn.addEventListener('click', async () => {
             document.body.style.backgroundImage = bgImageStyles.join(', ');
             
             // 쉼표로 구분하여 왼쪽, 오른쪽 각각의 속성 지정
-            document.body.style.backgroundSize = '30% auto, 30% auto';
+            document.body.style.backgroundSize = '25% auto, 30% auto';
             document.body.style.backgroundRepeat = 'no-repeat, no-repeat';
             // 왼쪽은 'left center', 오른쪽은 'right center'
             document.body.style.backgroundPosition = 'left center, right center';
