@@ -160,13 +160,31 @@ loginBtn.addEventListener('click', async () => {
       if (bgResponse.ok) {
         const bgBase64Text = await bgResponse.text();
         
+        // 줄바꿈('\n')을 기준으로 텍스트를 나누어 배열로 만듭니다.
+        const bgLines = bgBase64Text.trim().split('\n');
         
-        document.body.style.backgroundImage = `url(data:image/jpeg;base64,${bgBase64Text.trim()})`;
-        // 배경이미지 css 적용
-        document.body.style.backgroundSize = '30%';
-        document.body.style.backgroundRepeat = 'no-repeat';
-        document.body.style.backgroundPosition = 'right center';
-        document.body.style.backgroundAttachment = 'fixed';
+        // 두 줄(왼쪽, 오른쪽 이미지)이 모두 정상적으로 있는지 확인
+        if (bgLines.length >= 2) {
+          const baseLeft = bgLines[0].trim();
+          const baseRight = bgLines[1].trim();
+
+          // 첫 번째 줄은 png, 두 번째 줄은 jpeg로 처리하여 다중 배경 설정
+          // ※ 만약 base64 문자열이 비어있지 않은 경우에만 적용되도록 조건문 처리가 되어 있습니다.
+          let bgImageStyles = [];
+          if(baseLeft) bgImageStyles.push(`url(data:image/png;base64,${baseLeft})`);
+          if(baseRight) bgImageStyles.push(`url(data:image/jpeg;base64,${baseRight})`);
+
+          if (bgImageStyles.length > 0) {
+            document.body.style.backgroundImage = bgImageStyles.join(', ');
+            
+            // 쉼표로 구분하여 왼쪽, 오른쪽 각각의 속성 지정
+            document.body.style.backgroundSize = '30% auto, 30% auto';
+            document.body.style.backgroundRepeat = 'no-repeat, no-repeat';
+            // 왼쪽은 'left center', 오른쪽은 'right center'
+            document.body.style.backgroundPosition = 'left center, right center';
+            document.body.style.backgroundAttachment = 'fixed, fixed';
+          }
+        }
       } else {
         console.warn("배경 이미지 파일을 찾을 수 없습니다.");
       }
