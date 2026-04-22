@@ -1,4 +1,5 @@
 original/
 temp_json/
+private/
 *.py
-batch.txt
+patch.txt
