@@ -13,8 +13,8 @@ body {
 }
 
 #app {
-  background: white;
-  width: 80%;
+  background: rgba(255, 255, 255, 0.438);
+  width: 60%;
   /* max-width: 600px; */
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);

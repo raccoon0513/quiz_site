@@ -154,6 +154,27 @@ loginBtn.addEventListener('click', async () => {
     allQuestions = data;
     restoreOptions();
     renderUnitSelection();
+    
+    try {
+      const bgResponse = await fetch('./src/bg_base64.txt');
+      if (bgResponse.ok) {
+        const bgBase64Text = await bgResponse.text();
+        
+        
+        document.body.style.backgroundImage = `url(data:image/jpeg;base64,${bgBase64Text.trim()})`;
+        // 배경이미지 css 적용
+        document.body.style.backgroundSize = '30%';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundPosition = 'right center';
+        document.body.style.backgroundAttachment = 'fixed';
+      } else {
+        console.warn("배경 이미지 파일을 찾을 수 없습니다.");
+      }
+    } catch (err) {
+      console.warn("배경 이미지를 불러오는 중 에러가 발생했습니다.", err);
+    }
+  
+
     switchScreen('start-screen');
   } else {
     alert("올바르지 않은 키이거나 데이터를 불러올 수 없습니다.");
