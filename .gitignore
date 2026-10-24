@@ -1,5 +1,6 @@
 original/
 temp_json/
 private/
+how_to_use.md
 *.py
 patch.txt
